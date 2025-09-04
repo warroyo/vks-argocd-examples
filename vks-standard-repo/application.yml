@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vks-standard-repo
+spec:
+  destination:
+    namespace: default
+    server: https://197.0.0.13:6443
+  project: default
+  revisionHistoryLimit: 10
+  source:
+    path: ./vks-standard-repo/source
+    repoURL: https://github.com/warroyo/vks-argocd-examples
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
