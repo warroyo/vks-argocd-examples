@@ -1,0 +1,1 @@
+# vks-argocd-examples
