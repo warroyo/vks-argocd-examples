@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: observability
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - matrix:
+        generators:
+        - clusters:
+            selector:
+              matchLabels:
+                type: 'vks'
+        - list:
+            elements:
+            - appName: repo
+              path: ./vks-standard-repo/source
+              namespace: tkg-system
+            - appName: observability
+              path: ./observability/source
+              namespace: observability
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: golist-component
+              operator: In
+              values:
+                - repo
+        - matchExpressions:
+            - key: golist-component
+              operator: In
+              values:
+                - observability
+  template:
+    metadata:
+      name: '{{.name}}-{{.appName}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/warroyo/vks-argocd-examples
+        targetRevision: main
+        path: '{{.path}}'
+      destination:
+        name: '{{.server}}'
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2
+        syncOptions:
+        - CreateNamespace=true
