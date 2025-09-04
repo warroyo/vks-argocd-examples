@@ -1,18 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: vks-standard-repo
 spec:
-  destination:
-    namespace: default
-    server: https://197.0.0.13:6443
-  project: default
-  revisionHistoryLimit: 10
-  source:
-    path: ./vks-standard-repo/source
-    repoURL: https://github.com/warroyo/vks-argocd-examples
-    targetRevision: main
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          type: 'vks'
+  template:
+    metadata:
+      name: '{{.name}}-vks-standard-repo'
+    spec:
+      project: "default"
+      source:
+        path: ./vks-standard-repo/source
+        repoURL: https://github.com/warroyo/vks-argocd-examples
+        targetRevision: main
+      destination:
+        server: '{{.server}}'
+        namespace: tkg-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
