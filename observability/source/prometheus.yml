@@ -73,7 +73,7 @@ stringData:
         replicas: 0
 
 
-
+---
 apiVersion: v1
 kind: Secret
 metadata:
