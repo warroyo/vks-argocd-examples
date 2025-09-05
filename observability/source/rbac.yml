@@ -2,11 +2,15 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: observability-carvel-sa
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: observability-cluster-role
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
 rules:
 - apiGroups:
   - '*'
@@ -19,6 +23,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: observability-cluster-rolebinding
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole

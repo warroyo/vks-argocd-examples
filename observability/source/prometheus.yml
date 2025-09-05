@@ -98,6 +98,7 @@ kind: PackageInstall
 metadata:
   annotations:
     ext.packaging.carvel.dev/ytt-paths-from-secret-name.0: prometheus-remove-components
+    argocd.argoproj.io/sync-wave: '1'
   name: prometheus
 spec:
   packageRef:
