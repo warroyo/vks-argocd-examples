@@ -29,8 +29,8 @@ spec:
                 path: /spec/destination/name
                 value: '{{.name}}'
       destination:
-        server: '{{.server}}'
-        namespace: default
+        name: 'gitops-pcb4w'
+        namespace: 'gitops-pcb4w'
       syncPolicy:
         automated:
           prune: true
