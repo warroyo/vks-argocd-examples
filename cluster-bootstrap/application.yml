@@ -20,7 +20,7 @@ spec:
         repoURL: https://github.com/warroyo/vks-argocd-examples
         targetRevision: main
         kustomize:
-          namePrefix: '{{.name}}'
+          namePrefix: '{{.name}}-'
           patches:
           - target:
               kind: Application

@@ -6,7 +6,9 @@ This example combines a few examples into one. It's purpose is to be a boostrap 
 
 ## Usage
 
-1. connect to the supervisor cluster that argocd is running in and apply the application to the correct namespace.
+1. edit the application.yml file and update the destination name and namespace to the supervisor namespace
+
+2. connect to the supervisor cluster that argocd is running in and apply the application to the correct namespace.
 
 ```bash
 kubectl apply -f application.yml -n <supervisor-ns>`
