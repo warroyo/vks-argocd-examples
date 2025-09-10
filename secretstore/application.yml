@@ -25,6 +25,11 @@ spec:
               kind: Deployment
               name: vault-injector
             patch: |-
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: vault-injector
+                namespace: secret-store-injector
               spec:
                 containers:
                   - name: sidecar-injector
@@ -32,9 +37,11 @@ spec:
                       - name: AGENT_INJECT_VAULT_ADDR
                         value: http://197.0.0.26:8200
       destination:
-        name: gitops-nqtm8
-        namespace: gitops-nqtm8
+        name: '{{.name}}'
+        namespace: secret-store-injector
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
