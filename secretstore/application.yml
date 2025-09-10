@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: secret-store-integration
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          type: 'vks'
+  template:
+    metadata:
+      name: '{{.name}}-secret-store-int'
+    spec:
+      project: "default"
+      source:
+        path: ./secretstore/source
+        repoURL: https://github.com/warroyo/vks-argocd-examples
+        targetRevision: main
+        kustomize:
+          patches:
+          - target:
+              kind: Deployment
+              name: vault-injector
+            patch: |-
+              spec:
+                containers:
+                  - name: sidecar-injector
+                    env:
+                      - name: AGENT_INJECT_VAULT_ADDR
+                        value: http://197.0.0.26:8200
+      destination:
+        name: gitops-nqtm8
+        namespace: gitops-nqtm8
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,0 +1,212 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-injector
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vault-injector
+      app.kubernetes.io/instance: vault
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vault-injector
+        app.kubernetes.io/instance: vault
+    spec:
+      serviceAccountName: "vault-injector"
+      containers:
+        - name: sidecar-injector
+          image: "projects.packages.broadcom.com/vsphere/iaas/secret-store-service/9.0.0/vault-k8s:1.4.2"
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 1000
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: AGENT_INJECT_LISTEN
+              value: ":8080"
+            - name: AGENT_INJECT_LOG_LEVEL
+              value: "info"
+            - name: AGENT_INJECT_LOG_FORMAT
+              value: "standard"
+            - name: AGENT_INJECT_VAULT_ADDR
+              value: "http://<external-ip-of-secret-store>:8200"
+            - name: AGENT_INJECT_VAULT_IMAGE
+              value: "projects.packages.broadcom.com/vsphere/iaas/secret-store-service/9.0.0/openbao_ssl:0.0.15"
+            - name: AGENT_INJECT_TLS_AUTO
+              value: vault-agent-injector-cfg
+            - name: AGENT_INJECT_TLS_AUTO_HOSTS
+              value: "vault-agent-injector-svc,vault-agent-injector-svc.$(NAMESPACE),vault-agent-injector-svc.$(NAMESPACE).svc"
+            - name: AGENT_INJECT_USE_LEADER_ELECTOR
+              value: "true"
+            - name: AGENT_INJECT_DEFAULT_TEMPLATE
+              value: "map"
+            - name: AGENT_INJECT_CPU_REQUEST
+              value: "250m"
+            - name: AGENT_INJECT_MEM_REQUEST
+              value: "64Mi"
+            - name: AGENT_INJECT_CPU_LIMIT
+              value: "500m"
+            - name: AGENT_INJECT_MEM_LIMIT
+              value: "128Mi"
+          args:
+            - agent-inject
+            - 2>&1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-injector
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vault-injector-clusterrole
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+rules:
+  - apiGroups: ["admissionregistration.k8s.io"]
+    resources: ["mutatingwebhookconfigurations"]
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+      - "patch"
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs:
+      - "get"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-injector-binding
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vault-injector-clusterrole
+subjects:
+  - kind: ServiceAccount
+    name: vault-injector
+    namespace: demo
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vault-injector-role
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "configmaps"]
+    verbs:
+      - "create"
+      - "get"
+      - "watch"
+      - "list"
+      - "update"
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs:
+      - "get"
+      - "patch"
+      - "delete"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vault-injector-rolebinding
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vault-injector-role
+subjects:
+  - kind: ServiceAccount
+    name: vault-injector
+    namespace: demo
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: vault-agent-injector-cfg
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+webhooks:
+  - name: vault.hashicorp.com
+    sideEffects: None
+    admissionReviewVersions:
+      - "v1"
+      - "v1beta1"
+    clientConfig:
+      service:
+        name: vault-agent-injector-svc
+        path: "/mutate"
+        namespace: demo
+      caBundle: ""
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["deployments", "jobs", "pods", "statefulsets"]
+    namespaceSelector: {}
+    objectSelector:
+      matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: NotIn
+          values: ["vault-injector"]
+    failurePolicy: Ignore
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-agent-injector-svc
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: vault-injector
+    app.kubernetes.io/instance: vault           
+          
