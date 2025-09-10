@@ -31,11 +31,13 @@ spec:
                 name: vault-injector
                 namespace: secret-store-injector
               spec:
-                containers:
-                  - name: sidecar-injector
-                    env:
-                      - name: AGENT_INJECT_VAULT_ADDR
-                        value: http://197.0.0.26:8200
+                template:
+                  spec:
+                    containers:
+                      - name: sidecar-injector
+                        env:
+                          - name: AGENT_INJECT_VAULT_ADDR
+                            value: http://197.0.0.26:8200
       destination:
         name: '{{.name}}'
         namespace: secret-store-injector
