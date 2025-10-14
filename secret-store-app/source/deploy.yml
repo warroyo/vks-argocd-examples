@@ -16,7 +16,7 @@ spec:
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/role: 'cluster-wide'
-        vault.hashicorp.com/agent-inject-db-creds: 'secret/data/db-cred2'
+        vault.hashicorp.com/agent-inject-secret-db-creds: 'secret/gitops-nqtm8/db-cred2'
         vault.hashicorp.com/tls-skip-verify: 'true'
         vault.hashicorp.com/auth-path: replaceme-with-cluster-name
     spec:
