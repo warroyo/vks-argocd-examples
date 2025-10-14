@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: 'cluster-wide'
+        vault.hashicorp.com/agent-inject-db-creds: 'secret/data/db-cred2'
+        vault.hashicorp.com/tls-skip-verify: 'true'
+    spec:
+      containers:
+      - image: public.ecr.aws/nginx/nginx
+        name: nginx
+      serviceAccountName: app-service-account
