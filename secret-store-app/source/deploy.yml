@@ -18,6 +18,7 @@ spec:
         vault.hashicorp.com/role: 'cluster-wide'
         vault.hashicorp.com/agent-inject-db-creds: 'secret/data/db-cred2'
         vault.hashicorp.com/tls-skip-verify: 'true'
+        vault.hashicorp.com/auth-path: replaceme-with-cluster-name
     spec:
       containers:
       - image: public.ecr.aws/nginx/nginx
