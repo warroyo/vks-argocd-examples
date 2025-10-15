@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: secret-store-acme-example
+spec:
+  destination:
+    name: gitops-1
+    namespace: infra-packages
+  project: default
+  sources:
+    - path: ./contour-ingress/source
+      repoURL: https://github.com/warroyo/vks-argocd-examples
+      targetRevision: main
+    - path: ./cert-manager/source
+      repoURL: https://github.com/warroyo/vks-argocd-examples
+      targetRevision: main
+    - path: ./cert-manager/issuers/secret-store-acme
+      repoURL: https://github.com/warroyo/vks-argocd-examples
+      targetRevision: main
+    - path: ./package-rbac/source
+      repoURL: https://github.com/warroyo/vks-argocd-examples
+      targetRevision: main
+    - path: ./secret-store-issuer-full/source
+      repoURL: https://github.com/warroyo/vks-argocd-examples
+      targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 5
+    syncOptions:
+    - CreateNamespace=true

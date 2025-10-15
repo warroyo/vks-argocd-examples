@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: internal-ca
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  acme:
+    email: admins@mycompany.com
+    server: https://197.0.0.24:8200/v1/pki_int/acme/directory
+    privateKeySecretRef:
+      name: internal-ca-issuer-account-key
+    solvers:
+    - http01:
+        ingress:
+          ingressClassName: contour
