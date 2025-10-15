@@ -1,0 +1,14 @@
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: cert-manager
+  annotations:
+    argocd.argoproj.io/sync-wave: '1'
+spec:
+  packageRef:
+    refName: cert-manager.kubernetes.vmware.com
+    versionSelection:
+      constraints: 1.18.2+vmware.1-vks.1
+      prereleases: {}
+  serviceAccountName: carvel-sa
