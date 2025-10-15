@@ -29,7 +29,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cavrel-sa-cluster-role
+  name: carvel-sa-cluster-role
 subjects:
 - kind: ServiceAccount
   name: carvel-sa
