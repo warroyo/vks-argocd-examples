@@ -8,16 +8,7 @@ spec:
     namespace: infra-packages
   project: default
   sources:
-    - path: ./contour-ingress/source
-      repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
-    - path: ./cert-manager/source
-      repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
     - path: ./cert-manager/issuers/secret-store-acme
-      repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
-    - path: ./package-rbac/source
       repoURL: https://github.com/warroyo/vks-argocd-examples
       targetRevision: main
     - path: ./secret-store-issuer-full/source
