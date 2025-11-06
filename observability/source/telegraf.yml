@@ -19,7 +19,7 @@ spec:
     versionSelection:
       constraints: 1.32.1+vmware.1-tkg.1
       prereleases: {}
-  serviceAccountName: observability-carvel-sa
+  serviceAccountName: carvel-sa
   values:
   - secretRef:
       name: telegraf-values
