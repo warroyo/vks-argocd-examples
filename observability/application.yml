@@ -17,6 +17,9 @@ spec:
             - appName: repo
               path: ./vks-standard-repo/source
               namespace: tkg-system
+            - appName: rbac
+              path: ./package-rbac/source
+              namespace: infra-packages
             - appName: observability
               path: ./observability/source
               namespace: observability
@@ -29,6 +32,7 @@ spec:
               operator: In
               values:
                 - repo
+                - rbac
         - matchExpressions:
             - key: golist-component
               operator: In
