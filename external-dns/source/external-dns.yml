@@ -17,7 +17,7 @@ stringData:
       - --source=gateway-httproute
       - --domain-filter=apps.vcf.lab
       - --log-level=debug
-
+---
 apiVersion: v1
 kind: Secret
 metadata:
