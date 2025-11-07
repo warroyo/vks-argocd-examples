@@ -31,7 +31,7 @@ stringData:
     rules:
     #@overlay/append
     - apiGroups: ["gateway.networking.k8s.io"]
-      resources: ["httproutes"]
+      resources: ["httproutes","gateways"]
       verbs: ["get", "watch", "list"]
 
 ---
