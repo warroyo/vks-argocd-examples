@@ -33,6 +33,9 @@ stringData:
     - apiGroups: ["gateway.networking.k8s.io"]
       resources: ["httproutes","gateways"]
       verbs: ["get", "watch", "list"]
+    - apiGroups: [""]
+      resources: ["namespaces"]
+      verbs: ["get", "watch", "list"]
 
 ---
 apiVersion: packaging.carvel.dev/v1alpha1
