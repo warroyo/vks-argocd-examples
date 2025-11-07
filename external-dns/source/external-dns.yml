@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/sync-wave: '2'
 spec:
   packageRef:
-    refName: external-dns.tanzu.vmware.com
+    refName: external-dns.kubernetes.vmware.com
     versionSelection:
       constraints: 0.16.1+vmware.2-vks.1
       prereleases: {}
