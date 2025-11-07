@@ -1,0 +1,31 @@
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: external-dns
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+spec:
+  packageRef:
+    refName: external-dns.tanzu.vmware.com
+    versionSelection:
+      constraints: 0.16.1+vmware.2-vks.1
+      prereleases: {}
+  serviceAccountName: carvel-sa
+  values:
+  - inline:
+      deployment:
+        args:
+        - --registry=txt
+        - --txt-owner-id=k8s
+        - --txt-prefix=external-dns- 
+        - --provider=rfc2136
+        - --rfc2136-host=10.0.0.201
+        - --rfc2136-port=53
+        - --rfc2136-zone=vcf.lab
+        - --source=gateway-httproute
+        - --source=gateway-tlsroute
+        - --source=gateway-tcproute
+        - --source=gateway-udproute
+        - --domain-filter=apps.vcf.lab
+        - --log-level=debug
