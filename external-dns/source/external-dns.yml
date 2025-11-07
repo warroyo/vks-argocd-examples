@@ -1,3 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: external-dns-values
+stringData:
+  values.yml: |
+    ---
+    deployment:
+      args:
+      - --registry=txt
+      - --txt-owner-id=k8s
+      - --txt-prefix=external-dns- 
+      - --provider=rfc2136
+      - --rfc2136-host=10.0.0.201
+      - --rfc2136-port=53
+      - --rfc2136-zone=vcf.lab
+      - --source=gateway-httproute
+      - --source=gateway-tlsroute
+      - --source=gateway-tcproute
+      - --source=gateway-udproute
+      - --domain-filter=apps.vcf.lab
+      - --log-level=debug
+
 ---
 apiVersion: packaging.carvel.dev/v1alpha1
 kind: PackageInstall
@@ -13,19 +36,5 @@ spec:
       prereleases: {}
   serviceAccountName: carvel-sa
   values:
-  - inline:
-      deployment:
-        args:
-        - --registry=txt
-        - --txt-owner-id=k8s
-        - --txt-prefix=external-dns- 
-        - --provider=rfc2136
-        - --rfc2136-host=10.0.0.201
-        - --rfc2136-port=53
-        - --rfc2136-zone=vcf.lab
-        - --source=gateway-httproute
-        - --source=gateway-tlsroute
-        - --source=gateway-tcproute
-        - --source=gateway-udproute
-        - --domain-filter=apps.vcf.lab
-        - --log-level=debug
+  - secretRef:
+      name: external-dns-values
