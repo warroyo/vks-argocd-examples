@@ -17,6 +17,8 @@ stringData:
       - --source=gateway-httproute
       - --domain-filter=apps.vcf.lab
       - --log-level=debug
+      - --rfc2136-tsig-axfr
+      - --rfc2136-insecure
 ---
 apiVersion: v1
 kind: Secret
