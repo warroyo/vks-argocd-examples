@@ -15,11 +15,24 @@ stringData:
       - --rfc2136-port=53
       - --rfc2136-zone=vcf.lab
       - --source=gateway-httproute
-      - --source=gateway-tlsroute
-      - --source=gateway-tcproute
-      - --source=gateway-udproute
       - --domain-filter=apps.vcf.lab
       - --log-level=debug
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: add-gateway-api-overlay
+stringData:
+  gateway-perms.yml: |
+    #@ load("@ytt:overlay", "overlay")
+
+    #@overlay/match by=overlay.subset({"kind":"ClusterRole"}), expects=1
+    ---
+    rules:
+    #@overlay/append
+    - apiGroups: ["gateway.networking.k8s.io"]
+      resources: ["httproutes"]
+      verbs: ["get", "watch", "list"]
 
 ---
 apiVersion: packaging.carvel.dev/v1alpha1
@@ -28,6 +41,7 @@ metadata:
   name: external-dns
   annotations:
     argocd.argoproj.io/sync-wave: '2'
+    ext.packaging.carvel.dev/ytt-paths-from-secret-name.0: add-gateway-api-overlay
 spec:
   packageRef:
     refName: external-dns.kubernetes.vmware.com
