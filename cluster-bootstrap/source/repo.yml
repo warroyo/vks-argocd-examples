@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/warroyo/vks-argocd-examples
-    targetRevision: main
+    targetRevision: 1.0.1
     path: ./vks-standard-repo/source
   destination:
     name: replacme
