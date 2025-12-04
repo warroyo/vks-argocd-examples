@@ -11,11 +11,11 @@ stringData:
       - --txt-owner-id=k8s
       - --txt-prefix=external-dns- 
       - --provider=rfc2136
-      - --rfc2136-host=10.0.0.201
+      - --rfc2136-host=10.1.10.130
       - --rfc2136-port=53
       - --rfc2136-zone=vcf.lab
       - --source=gateway-httproute
-      - --domain-filter=vcf.lab
+      - --domain-filter=apps.site-a.vcf.lab
       - --log-level=debug
       - --rfc2136-tsig-axfr
       - --rfc2136-insecure
