@@ -11,13 +11,13 @@ spec:
   sources:
     - path: ./istio/source
       repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
+      targetRevision: 2.0.0
     - path: ./external-dns/source
       repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
+      targetRevision: 2.0.0
     - path: ./cert-manager/source
       repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
+      targetRevision: 2.0.0
   destination:
     name: replacme
     namespace: infra-packages

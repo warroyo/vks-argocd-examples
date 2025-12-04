@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/warroyo/vks-argocd-examples
-    targetRevision: main
+    targetRevision: 2.0.0
     path: ./observability/source
   destination:
     name: replacme

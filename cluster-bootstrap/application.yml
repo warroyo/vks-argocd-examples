@@ -20,7 +20,7 @@ spec:
       source:
         path: ./cluster-bootstrap/source
         repoURL: https://github.com/warroyo/vks-argocd-examples
-        targetRevision: main
+        targetRevision: 2.0.0
         kustomize:
           namePrefix: '{{.name}}-'
           patches:
