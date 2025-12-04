@@ -18,7 +18,7 @@ spec:
     spec:
       project: "default"
       source:
-        path: ./cluster-bootstrap/source
+        path: ./cluster-bootstrap/basic
         repoURL: https://github.com/warroyo/vks-argocd-examples
         targetRevision: main
         kustomize:
