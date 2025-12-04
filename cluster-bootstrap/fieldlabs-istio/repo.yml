@@ -11,10 +11,10 @@ spec:
   sources:
     - path: ./package-rbac/source
       repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
+      targetRevision: 2.0.0
     - path: ./vks-standard-repo/source
       repoURL: https://github.com/warroyo/vks-argocd-examples
-      targetRevision: main
+      targetRevision: 2.0.0
   destination:
     name: replacme
     namespace: tkg-system
