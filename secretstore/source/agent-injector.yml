@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: vault-injector
   namespace: secret-store-injector
+  annotations:
+    argocd.argoproj.io/sync-wave: '-1'
   labels:
     app.kubernetes.io/name: vault-injector
     app.kubernetes.io/instance: vault
