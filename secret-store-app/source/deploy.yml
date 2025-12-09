@@ -21,11 +21,6 @@ spec:
         vault.hashicorp.com/agent-inject-secret-db-creds.yaml: 'secret/gitops-6smpt/db-cred2'
         vault.hashicorp.com/tls-skip-verify: 'true'
         vault.hashicorp.com/auth-path: replaceme-with-cluster-name
-        vault.hashicorp.com/agent-inject-template-db-config.yaml: |
-          {{- with secret "secret/data/my-app/database" -}}
-          username: {{ .Data.data.username }}
-          password: {{ .Data.data.password }}
-          {{- end -}}
     spec:
       containers:
       - image: public.ecr.aws/nginx/nginx
