@@ -1,6 +1,8 @@
 apiVersion: vmoperator.vmware.com/v1alpha3
 kind: VirtualMachine
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: gitops-vm
   labels:
     vm-selector: vm-sns7
@@ -31,6 +33,8 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
   name: gitops-vm-pvc-0
   labels:
     vm-selector: gitops-vm
