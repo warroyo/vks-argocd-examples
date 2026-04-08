@@ -8,7 +8,7 @@ spec:
     namespace: dev-1-shkrg
   project: infra
   source:
-    path: virtualmachine
+    path: virtualmachine/source
     repoURL: https://github.com/warroyo/vks-argocd-examples
     targetRevision: main
   syncPolicy:
