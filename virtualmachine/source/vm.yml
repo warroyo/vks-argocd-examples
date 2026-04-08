@@ -1,0 +1,73 @@
+apiVersion: vmoperator.vmware.com/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: gitops-vm
+  namespace: dev-ts6hw
+  labels:
+    vm-selector: vm-sns7
+    gitops-vm-lb: vm-lb-selector
+    topology.kubernetes.io/zone: zone1
+spec:
+  className: best-effort-small
+  # Friendly image name: noble-server-cloudimg-amd64
+  imageName: vmi-37942d180a09096b9
+  storageClass: vsan-default-storage-policy
+  powerState: PoweredOn
+  volumes:
+    - name: gitops-vm-pvc-0
+      persistentVolumeClaim:
+        claimName: gitops-vm-pvc-0
+  network:
+    interfaces:
+      - name: eth0
+        network:
+          name: vm-default
+          kind: SubnetSet
+  bootstrap:
+    cloudInit:
+      rawCloudConfig:
+        name: gitops-vm-bootstrap-secret
+        key: user-data
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitops-vm-bootstrap-secret
+  namespace: dev-ts6hw
+  labels:
+    vm-selector: gitops-vm
+stringData:
+  user-data: |
+    #cloud-config
+    
+    package_update: true
+    package_upgrade: false
+    
+    # 1. User Configuration
+    users:
+      - name: demouser
+        sudo: ['ALL=(ALL) NOPASSWD:ALL']
+        groups: sudo
+        shell: /bin/bash
+        lock_passwd: false
+        # Password: VMware1!
+        passwd: "$6$XlPaQkGtoUOWqfKz$Jb3uBcfTpIIskc3oFGZYwyaqRCDp..Q7EGvAkEAlb5hv.la5MCaBd1OxjOJJstEE78LoXsR2QByXsfCmXFNZ11"
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAyCdobTWPsYBjDRTcUYO/6LF8wwkVAlU8Jm1KcB9FV+qbjmazGH0JV156LnwerqU59ehc9CSSCFRciSyq/04lHoD3erXqzloBEBxnynq7aWHVotB39ODRSTvjqraGh2+MfIeatTeAtRB7k6LLhcT9ADdAMQIR236W9iHxAX9rJVHwtdtDQNckdFSSdlgnH1FcZvlsAPelmBe/tNYVm091/vJZEqfKR80QKDc7Dmah7NJImWPuQXtsPAecOX/iEMVJJDeHnAI1zyJ7Mvqfph3Tp5qIcLgQ/UadSt18dHUyXaYuOXDzbVJX3/EBkV+FAymjklbTFVz965niGyaEw1aW+Q== rsa-key-20220728
+
+---
+apiVersion: vmoperator.vmware.com/v1alpha3
+kind: VirtualMachineService
+metadata:
+  name: gitops-vm-lb
+  namespace: dev-ts6hw
+spec:
+  selector:
+    gitops-vm-lb: vm-lb-selector
+  type: LoadBalancer
+  ports:
+    - name: ssh
+      protocol: TCP
+      port: 22
+      targetPort: 22

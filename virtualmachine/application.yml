@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-vm-exmaple
+spec:
+  destination:
+    name: supervisor-ns-dev-1-shkrg
+    namespace: dev-1-shkrg
+  project: infra
+  source:
+    path: virtualmachine
+    repoURL: https://github.com/warroyo/vks-argocd-examples
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
