@@ -3,7 +3,6 @@ apiVersion: vmoperator.vmware.com/v1alpha3
 kind: VirtualMachineService
 metadata:
   name: gitops-vm-lb
-  namespace: dev-ts6hw
 spec:
   selector:
     gitops-vm-lb: vm-lb-selector
