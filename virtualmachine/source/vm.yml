@@ -27,7 +27,23 @@ spec:
       rawCloudConfig:
         name: gitops-vm-bootstrap-secret
         key: user-data
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitops-vm-pvc-0
+  labels:
+    vm-selector: gitops-vm
+  annotations:
+    csi.vsphere.volume-requested-topology: '[{"topology.kubernetes.io/zone":"zone1"}]'
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Block
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: vsan-default-storage-policy
 ---
 apiVersion: v1
 kind: Secret
