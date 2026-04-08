@@ -56,18 +56,3 @@ stringData:
         ssh_authorized_keys:
           - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAyCdobTWPsYBjDRTcUYO/6LF8wwkVAlU8Jm1KcB9FV+qbjmazGH0JV156LnwerqU59ehc9CSSCFRciSyq/04lHoD3erXqzloBEBxnynq7aWHVotB39ODRSTvjqraGh2+MfIeatTeAtRB7k6LLhcT9ADdAMQIR236W9iHxAX9rJVHwtdtDQNckdFSSdlgnH1FcZvlsAPelmBe/tNYVm091/vJZEqfKR80QKDc7Dmah7NJImWPuQXtsPAecOX/iEMVJJDeHnAI1zyJ7Mvqfph3Tp5qIcLgQ/UadSt18dHUyXaYuOXDzbVJX3/EBkV+FAymjklbTFVz965niGyaEw1aW+Q== rsa-key-20220728
 
----
-apiVersion: vmoperator.vmware.com/v1alpha3
-kind: VirtualMachineService
-metadata:
-  name: gitops-vm-lb
-  namespace: dev-ts6hw
-spec:
-  selector:
-    gitops-vm-lb: vm-lb-selector
-  type: LoadBalancer
-  ports:
-    - name: ssh
-      protocol: TCP
-      port: 22
-      targetPort: 22
